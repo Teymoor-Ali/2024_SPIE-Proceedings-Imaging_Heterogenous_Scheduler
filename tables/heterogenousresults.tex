@@ -1,0 +1,32 @@
+\begin{table}
+\centering
+\setlength{\extrarowheight}{0pt}
+\addtolength{\extrarowheight}{\aboverulesep}
+\addtolength{\extrarowheight}{\belowrulesep}
+\setlength{\aboverulesep}{0pt}
+\setlength{\belowrulesep}{0pt}
+\caption{Results Table of Pipelines on Heterogeneous Platform}
+\label{tab:heterogenoussummary}
+\arrayrulecolor{black}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{c|c|l|l|c|l|l|c|l|l|l|l|l} 
+\toprule
+\rowcolor[rgb]{0.753,0.753,0.753} {\cellcolor[rgb]{0.753,0.753,0.753}} & \multicolumn{12}{c}{\textbf{Heterogeneous Architecture (ms)}} \\ 
+\hhline{>{\arrayrulecolor[rgb]{0.753,0.753,0.753}}->{\arrayrulecolor{black}}------------}
+\rowcolor[rgb]{0.753,0.753,0.753} {\cellcolor[rgb]{0.753,0.753,0.753}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Accelerator for}\\\textbf{ Partitioned Operation}\end{tabular}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{~ Total }\\\textbf{Runtime (ms)}\end{tabular}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Total}\\\textbf{Energy usage}\\\textbf{(Joules)}\end{tabular}} & \multicolumn{3}{l}{\textbf{Frames per Second}} \\ 
+\hhline{>{\arrayrulecolor[rgb]{0.753,0.753,0.753}}->{\arrayrulecolor{black}}------------}
+\rowcolor[rgb]{0.851,0.851,0.851} \multirow{-3}{*}{{\cellcolor[rgb]{0.753,0.753,0.753}}\textbf{Algorithm}} & \multicolumn{1}{l|}{CPU} & GPU & FPGA & \multicolumn{1}{l|}{CPU} & GPU & FPGA & \multicolumn{1}{l|}{CPU} & GPU & FPGA & CPU & GPU & FPGA \\ 
+\hline
+Histogram Equalisation + ResNet-18 & x &  &  &  &  &  &  &  &  &  &  &  \\ 
+\cmidrule{1-1}\cline{2-13}
+ &  &  &  &  &  &  &  &  &  &  &  &  \\ 
+\cmidrule{1-1}\cline{2-13}
+ &  &  &  &  &  &  &  &  &  &  &  &  \\ 
+\cmidrule{1-1}\cline{2-13}
+ &  &  &  &  &  &  &  &  &  &  &  &  \\ 
+\cmidrule{1-1}\cline{2-13}
+ &  &  &  &  &  &  &  &  &  &  &  &  \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

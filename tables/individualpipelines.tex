@@ -1,0 +1,30 @@
+\begin{table}
+\centering
+\setlength{\extrarowheight}{0pt}
+\addtolength{\extrarowheight}{\aboverulesep}
+\addtolength{\extrarowheight}{\belowrulesep}
+\setlength{\aboverulesep}{0pt}
+\setlength{\belowrulesep}{0pt}
+\caption{Results Table of Vision Pipelines on Individual Hardware}
+\label{tab:heterogenoussummary}
+\arrayrulecolor{black}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{c|c|l|l|c|l|l|l|l|l|l|l|l} 
+\toprule
+\rowcolor[rgb]{0.753,0.753,0.753} {\cellcolor[rgb]{0.753,0.753,0.753}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{~ Total }\\\textbf{Runtime (ms)}\end{tabular}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Total}\\\textbf{Energy usage}\\\textbf{(Joules)}\end{tabular}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Frames per Second}\\\textbf{(FPS)}\end{tabular}} & \multicolumn{3}{c}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Memory Latency}\\\textbf{(ms)}\end{tabular}} \\ 
+\hhline{>{\arrayrulecolor[rgb]{0.753,0.753,0.753}}->{\arrayrulecolor{black}}------------}
+\rowcolor[rgb]{0.851,0.851,0.851} \multirow{-2}{*}{{\cellcolor[rgb]{0.753,0.753,0.753}}\textbf{Pipeline}} & \multicolumn{1}{l|}{\textbf{CPU}} & \textbf{GPU} & \textbf{FPGA} & \multicolumn{1}{l|}{\textbf{CPU}} & \textbf{GPU} & \textbf{FPGA} & \textbf{CPU} & \textbf{GPU} & \textbf{FPGA} & \textbf{CPU} & \textbf{GPU} & \textbf{FPGA} \\ 
+\hline
+Histogram Equalisation + ResNet-18 & 10.0216 & 2.6381 &  &  & &  & 99.78 & 379.06 & &  & & \\ 
+\cmidrule{1-1}\cline{2-13}
+ &  &  &  &  &  &  &  &  &  &  &  &  \\ 
+\cmidrule{1-1}\cline{2-13}
+ &  &  &  &  &  &  &  &  &  &  &  &  \\ 
+\cmidrule{1-1}\cline{2-13}
+ &  &  &  &  &  &  &  &  &  &  &  &  \\ 
+\cmidrule{1-1}\cline{2-13}
+ &  &  &  &  &  &  &  &  &  &  &  &  \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
