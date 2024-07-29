@@ -1,3 +1,36 @@
+% \begin{table}
+% \centering
+% \setlength{\extrarowheight}{0pt}
+% \addtolength{\extrarowheight}{\aboverulesep}
+% \addtolength{\extrarowheight}{\belowrulesep}
+% \setlength{\aboverulesep}{0pt}
+% \setlength{\belowrulesep}{0pt}
+% \caption{Results Table of Vision Pipelines on Individual Hardware}
+% \label{tab:heterogenoussummary}
+% \arrayrulecolor{black}
+% \resizebox{\linewidth}{!}{%
+% \begin{tabular}{c|c|l|l|c|l|l|l|l|l|l|l|l} 
+% \toprule
+% \rowcolor[rgb]{0.753,0.753,0.753} {\cellcolor[rgb]{0.753,0.753,0.753}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{~ Total }\\\textbf{Runtime (ms)}\end{tabular}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Total}\\\textbf{Energy usage}\\\textbf{(Joules)}\end{tabular}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Frames per Second}\\\textbf{(FPS)}\end{tabular}} & \multicolumn{3}{c}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Memory Latency}\\\textbf{(ms)}\end{tabular}} \\ 
+% \hhline{>{\arrayrulecolor[rgb]{0.753,0.753,0.753}}->{\arrayrulecolor{black}}------------}
+% \rowcolor[rgb]{0.851,0.851,0.851} \multirow{-2}{*}{{\cellcolor[rgb]{0.753,0.753,0.753}}\textbf{Pipeline}} & \multicolumn{1}{l|}{\textbf{CPU}} & \textbf{GPU} & \textbf{FPGA} & \multicolumn{1}{l|}{\textbf{CPU}} & \textbf{GPU} & \textbf{FPGA} & \textbf{CPU} & \textbf{GPU} & \textbf{FPGA} & \textbf{CPU} & \textbf{GPU} & \textbf{FPGA} \\ 
+% \hline
+% Histogram Equalisation + ResNet-18 & 10.0216 & 2.6381 &  &  & &  & 99.78 & 379.06 & &  & & \\ 
+% \cmidrule{1-1}\cline{2-13}
+%  &  &  &  &  &  &  &  &  &  &  &  &  \\ 
+% \cmidrule{1-1}\cline{2-13}
+%  &  &  &  &  &  &  &  &  &  &  &  &  \\ 
+% \cmidrule{1-1}\cline{2-13}
+%  &  &  &  &  &  &  &  &  &  &  &  &  \\ 
+% \cmidrule{1-1}\cline{2-13}
+%  &  &  &  &  &  &  &  &  &  &  &  &  \\
+% \bottomrule
+% \end{tabular}
+% }
+% \end{table}
+
+
+
 \begin{table}
 \centering
 \setlength{\extrarowheight}{0pt}
@@ -5,25 +38,35 @@
 \addtolength{\extrarowheight}{\belowrulesep}
 \setlength{\aboverulesep}{0pt}
 \setlength{\belowrulesep}{0pt}
-\caption{Results Table of Vision Pipelines on Individual Hardware}
+\caption{Results Table of Individual Algorithms and Vision Pipelines on each Hardware.}
 \label{tab:heterogenoussummary}
 \arrayrulecolor{black}
 \resizebox{\linewidth}{!}{%
-\begin{tabular}{c|c|l|l|c|l|l|l|l|l|l|l|l} 
+\begin{tabular}{c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c} 
 \toprule
-\rowcolor[rgb]{0.753,0.753,0.753} {\cellcolor[rgb]{0.753,0.753,0.753}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{~ Total }\\\textbf{Runtime (ms)}\end{tabular}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Total}\\\textbf{Energy usage}\\\textbf{(Joules)}\end{tabular}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Frames per Second}\\\textbf{(FPS)}\end{tabular}} & \multicolumn{3}{c}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Memory Latency}\\\textbf{(ms)}\end{tabular}} \\ 
-\hhline{>{\arrayrulecolor[rgb]{0.753,0.753,0.753}}->{\arrayrulecolor{black}}------------}
-\rowcolor[rgb]{0.851,0.851,0.851} \multirow{-2}{*}{{\cellcolor[rgb]{0.753,0.753,0.753}}\textbf{Pipeline}} & \multicolumn{1}{l|}{\textbf{CPU}} & \textbf{GPU} & \textbf{FPGA} & \multicolumn{1}{l|}{\textbf{CPU}} & \textbf{GPU} & \textbf{FPGA} & \textbf{CPU} & \textbf{GPU} & \textbf{FPGA} & \textbf{CPU} & \textbf{GPU} & \textbf{FPGA} \\ 
+\rowcolor[rgb]{0.753,0.753,0.753} {\cellcolor[rgb]{0.753,0.753,0.753}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{~ Kernel}\\\textbf{Runtime (ms)}\end{tabular}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Kernel Energy }\\\textbf{(Joules)}\end{tabular}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Kernel }\\\textbf{Frames per Second}\\\textbf{(FPS)}\end{tabular}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Total Runtime}\\\textbf{(ms)}\end{tabular}} & \multicolumn{3}{c}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Total Energy}\\\textbf{(Joules)}\end{tabular}} \\ 
+\hhline{>{\arrayrulecolor[rgb]{0.753,0.753,0.753}}->{\arrayrulecolor{black}}---------------}
+\rowcolor[rgb]{0.851,0.851,0.851} \multirow{-2}{*}{{\cellcolor[rgb]{0.753,0.753,0.753}}\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Algorithm/}\\\textbf{Pipeline}\end{tabular}} & \textbf{CPU} & \textbf{GPU} & \textbf{FPGA} & \textbf{CPU} & \textbf{GPU} & \textbf{FPGA} & \textbf{CPU} & \textbf{GPU} & \textbf{FPGA} & \textbf{CPU} & \textbf{GPU} & \textbf{FPGA} & \textbf{CPU} & \textbf{GPU} & \textbf{FPGA} \\ 
 \hline
-Histogram Equalisation + ResNet-18 & 10.0216 & 2.6381 &  &  & &  & 99.78 & 379.06 & &  & & \\ 
-\cmidrule{1-1}\cline{2-13}
- &  &  &  &  &  &  &  &  &  &  &  &  \\ 
-\cmidrule{1-1}\cline{2-13}
- &  &  &  &  &  &  &  &  &  &  &  &  \\ 
-\cmidrule{1-1}\cline{2-13}
- &  &  &  &  &  &  &  &  &  &  &  &  \\ 
-\cmidrule{1-1}\cline{2-13}
- &  &  &  &  &  &  &  &  &  &  &  &  \\
+RGB2Gray & 3.30 & 8.51 & 2.92 & 0.23 & 0.36 & 0.05 & 303.03 & 117.65 & 344.83 & 44.1 & 212 & 7.61 & 3.52 & 9.116 & 0.14 \\ 
+\cmidrule{1-1}\cline{2-16}
+Histogram Equalisation & 13.11 & 4.67 & 4.35 & 1.04 & 0.20 & 0.087 & 76.29 & 214.16 & 229.89 & 94 & 260 & 14.54 & 7.52 & 11.7 & 0.32 \\ 
+\cmidrule{1-1}\cline{2-16}
+Gaussian Filter (7x7) & 24.77 & 10.36 & 12.48 & 1.98 & 0.52 & 0.28 & 40.37 & 96.53 & 80.13 & 32.73 & 286 & 17.61 & 2.58 & 14.3 & 0.41 \\ 
+\cmidrule{1-1}\cline{2-16}
+Resize & 3.27 & 3.83 & 2.64 & 0.24 & 0.14 & 0.05 & 305.81 & 261.62 & 378.79 & 32.25 & 218.56 & 27.94 & 2.41 & 7.90 & 0.53 \\ 
+\cmidrule{1-1}\cline{2-16}
+Resnet50 & 33.11 & 5.67 & 8.61 & 2.42 & 0.31 & 0.23 & 30.20 & 178.56 & 116.13  & 280.40 & 290.42 & 25.53 & 22.43 & 15.46 & 0.68 \\ 
+\hline
+MobilnetV2 & 12.06 & 5.00 & 6.78 & 0.96 & 0.25 & 0.18 & 82.92 & 199.88 & 147.49 & 88.31 & 88.57 & 14.23 & 7.06 & 3.99 & 0.37 \\ 
+\hline
+InceptionV3 & 35.50 & 8.12 & 10.91 & 2.84 & 0.41 & 0.31 & 28.17 & 123.12 & 91.66 & 217.76 & 269.93 & 14.91 & 17.4 & 13.50 & 0.40 \\ 
+\hline
+\begin{tabular}[c]{@{}c@{}}Histogram Equalisation \\+ ResNet-50\end{tabular} & 35.01 & 7.79 & 9.13 & 2.78 & 0.33 & 0.29 & 28.56 & 128.37 & 109.53 & 216.16 & 323.97 & 30.72 & 17.30 & 16.30 & 0.82 \\ 
+\hline
+\begin{tabular}[c]{@{}c@{}}Gaussian Filter \\+ MobilnetV2\end{tabular} & 12.29 & 5.83 & 7.16 & 0.98 & 0.26 & 0.19 & 81.37 & 171.44 & 139.66 & 97.14 & 104.30 & 18.94 & 7.80 & 4.70 & 0.51 \\ 
+\hline
+\begin{tabular}[c]{@{}c@{}}RGB2Gray \\+ InceptionV3\end{tabular} & 44.81 & 9.59 & 13.79 & 3.60 & 0.44 & 0.37 & 22.32 & 104.27 & 72.52 & 229.19 & 221.93 & 16.17 & 18.33 & 11.09 & 0.45 \\
 \bottomrule
 \end{tabular}
 }

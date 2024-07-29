@@ -1,63 +1,104 @@
-\pgfplotsset{width=\linewidth,compat=1.3}
+\pgfplotsset{width=0.6\linewidth,compat=1.3}
 \begin{tikzpicture}
+    % Kernel Time Axis
     \begin{axis}[
-        width  = \linewidth,
+        width  = 0.8\linewidth,
         major x tick style = transparent,
-        ybar=2*\pgflinewidth,
-        ymin=0,ymax=100,
-        bar width=10pt,
+        ybar,
+        ymin=0, ymax=350,
+        bar width=8pt,
         enlarge y limits={upper=0.15},
-        legend image code/.code={\draw[#1, draw=none] (0cm,-0.1cm) rectangle (0.3cm,0.1cm);
-                },
-        ymajorgrids = true,
-        ylabel = {Execution Time (ms)},
+        legend image code/.code={\draw[#1, draw=none] (0cm,-0.1cm) rectangle (0.3cm,0.1cm);},
+        ymajorgrids = false,
+        ylabel = {\textbf{Kernel Time (ms) / Total Time (ms)}},
         symbolic x coords={CPU,GPU,FPGA},
         xtick = data,
         nodes near coords,
-        nodes near coords style={font=\tiny, anchor=west,rotate=90,inner xsep=0.5pt,black},
+        nodes near coords style={font=\small, anchor=west,rotate=90,inner xsep=0.9pt,black},
         scaled y ticks = false,
         enlarge x limits=0.30,
         legend cell align=left,
-           enlarge y limits={upper=0.15},
-    legend style={at={(0.2645,0.8915)},
-                   anchor=west,legend columns=4, font=\small},
+        legend style={at={(0.7,0.78)},
+                       anchor=west,legend columns=1, font=\small},
+        axis on top,
     ]
-        \addplot[style={blue,fill=blue!60}]
-            coordinates {(CPU, 0.75) (GPU,0.45) (FPGA,0.40)}; % RGB2GRAY
-        \addplot[style={darkcandyapplered,fill=darkcandyapplered}]
-             coordinates {(CPU,3.5) (GPU,0.28) (FPGA,0.25)}; % Gaussian
-        \addplot[style={forestgreen,fill=forestgreen}]
-             coordinates {(CPU,15.1) (GPU,9.88) (FPGA,8.23)}; % Box
+        % Total Time Data Plots
+        \addplot[style={blue,fill=blue!60}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=20pt}]
+            coordinates {(CPU, 44.1) (GPU, 212) (FPGA, 7.61)}; % RGB2GRAY
+        \addplot[style={darkcandyapplered,fill=darkcandyapplered}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=10pt}]
+            coordinates {(CPU, 94) (GPU, 260) (FPGA, 14.54)}; % Histogram Equalisation
+        \addplot[style={forestgreen,fill=forestgreen}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=15pt}]
+            coordinates {(CPU, 32.73) (GPU, 286) (FPGA, 17.61)}; % Gaussian Filter (7x7)
         \addplot[style={gray,fill=gray}]
-             coordinates {(CPU,105) (GPU,64) (FPGA,71)}; % Median
+            coordinates {(CPU, 32.25) (GPU, 218.56) (FPGA, 27.94)}; % Resize
         \addplot[style={pastelorange,fill=pastelorange}]
-             coordinates {(CPU,25.7) (GPU,0.51) (FPGA,1.2)}; % Sobel
-        \addplot[style={oorange,fill=oorange}]
-             coordinates {(CPU,1.6) (GPU,0.3) (FPGA,0.24)}; % resize
-        \addplot[style={purple,fill=purple}]
-             coordinates {(CPU,2.6) (GPU,0.30) (FPGA,0.25)}; % image add
-        \addplot[style={richlavender,fill=richlavender}]
-             coordinates {(CPU,2.5) (GPU,0.18) (FPGA,0.18)}; % image subtract
-        \addplot[style={teal,fill=teal}]
-             coordinates {(CPU,9.2) (GPU,5.5) (FPGA,6.6)}; % erode
-        % \addplot[style={ppink,fill=ppink}]
-        %      coordinates {(CPU,9.3) (GPU,5.7) (FPGA,6.8)}; % dilate
-        % \addplot[style={bbrown,fill=bbrown}]
-        %      coordinates {(CPU,43) (GPU,7) (FPGA,14)};  % Gamma           
-        % \addplot[style={cyan,fill=cyan}]
-        %      coordinates {(CPU,10.8) (GPU,0.25) (FPGA,0.20)}; % Placeholder for Linearization
-        % \addplot[style={magenta,fill=magenta}]
-        %      coordinates {(CPU,21.6) (GPU,0.19) (FPGA,0.28)}; % Placeholder for White Balance
-        % \addplot[style={peridot,fill=peridot}]
-        %      coordinates {(CPU,32) (GPU,0.44) (FPGA,1.1)}; % GEMM
-        % \addplot[style={wenge,fill=wenge}]
-        %      coordinates {(CPU,44) (GPU,24) (FPGA,18)}; % FFT
-        % \addplot[style={yellow-green,fill=yellow-green}]
-        %      coordinates {(CPU,1.8) (GPU,1.1) (FPGA,1.4)}; % STREAM
-        % \addplot[style={brown,fill=brown}]
-        %      coordinates {(CPU,3.3) (GPU,0.87) (FPGA,1.24)}; %Demosaicing
-        \legend{R2G,Gaussian,Box, Median, Sobel,Resizing, Addition, Subtraction, Erode}
+            coordinates {(CPU, 280.40) (GPU, 309.22) (FPGA, 25.53)}; % Resnet50
+        \addplot[style={oorange,fill=oorange}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=20pt}]
+            coordinates {(CPU, 88.31) (GPU, 88.57) (FPGA, 14.23)}; % MobilnetV2
+        \addplot[style={purple,fill=purple}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=20pt}]
+            coordinates {(CPU, 217.76) (GPU, 269.93) (FPGA, 14.91)}; % InceptionV3
+        \addplot[style={richlavender,fill=richlavender}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=10pt}]
+            coordinates {(CPU, 216.16) (GPU, 323.97) (FPGA, 30.72)}; % Histogram Equalisation + ResNet-50
+        \addplot[style={teal,fill=teal}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=20pt}]
+            coordinates {(CPU, 97.14) (GPU, 104.30) (FPGA, 18.94)}; % Gaussian Filter + MobilnetV2
+        
+        \addplot[style={ppink,fill=ppink}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=20pt}]
+            coordinates {(CPU, 229.19) (GPU, 221.93) (FPGA, 16.17)}; % RGB2Gray + InceptionV3
+
+        \legend{R2G, Hist. Eql., Gaussian, Resize, Resnet50, MobilnetV2, InceptionV3, Hist+Resnet50, Gauss+MobilnetV2, R2G+InceptionV3}
+    \end{axis}
+
+    % Total Time Axis
+    \begin{axis}[
+        width  = 0.8\linewidth,
+        major x tick style = transparent,
+        ybar,
+        ymin=0, ymax=350,
+        bar width=8pt,
+        enlarge y limits={upper=0.15},
+        legend image code/.code={\draw[#1, draw=none] (0cm,-0.1cm) rectangle (0.3cm,0.1cm);},
+        ymajorgrids = false,
+        ylabel = {\textbf{}},
+        axis y line*=right,
+        axis x line=none,
+        symbolic x coords={CPU,GPU,FPGA},
+        xtick = \empty,
+        ytick style = {draw=none}, % Hides the y-axis ticks
+        yticklabels = {}, % Hides the y-axis labels
+        nodes near coords,
+        nodes near coords style={font=\small, anchor=west,rotate=90,inner xsep=0.5pt,black,shift={(-2.5pt,0pt)}}, % Adjust shift as needed
+        scaled y ticks = false,
+        enlarge x limits=0.30,
+        legend cell align=left,
+        legend style={at={(0.5,1.05)},
+                       anchor=west,legend columns=4, font=\small},
+    ]
+    
+        % Kernel Time Data Plots
+        \addplot[style={blue,fill=blue!30}]
+            coordinates {(CPU, 3.30) (GPU, 8.51) (FPGA, 2.92)}; % RGB2GRAY
+        \addplot[style={darkcandyapplered,fill=darkcandyapplered!30}]
+            coordinates {(CPU, 13.11) (GPU, 4.67) (FPGA, 4.35)}; % Histogram Equalisation
+        \addplot[style={forestgreen,fill=forestgreen!30}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=-5pt}]
+            coordinates {(CPU, 24.77) (GPU, 10.36) (FPGA, 12.48)}; % Gaussian Filter (7x7)
+        \addplot[style={gray,fill=gray!30}]
+            coordinates {(CPU, 3.27) (GPU, 3.83) (FPGA, 2.64)}; % Resize
+        \addplot[style={pastelorange,fill=pastelorange!30},every node near coord/.append style={rotate=0, anchor=west,inner xsep=-3pt}]
+            coordinates {(CPU, 33.11) (GPU, 5.67) (FPGA, 8.61)}; % Resnet50
+        \addplot[style={oorange,fill=oorange!30}]
+            coordinates {(CPU, 12.06) (GPU, 5.00) (FPGA, 6.78)}; % MobilnetV2
+        \addplot[style={purple,fill=purple!30},every node near coord/.append style={rotate=0, anchor=west,inner xsep=-5pt}]
+            coordinates {(CPU, 35.50) (GPU, 8.12) (FPGA, 10.91)}; % InceptionV3
+        \addplot[style={richlavender,fill=richlavender!30},every node near coord/.append style={rotate=0, anchor=west,inner xsep=-3pt}]
+            coordinates {(CPU, 35.01) (GPU, 7.79) (FPGA, 9.13)}; % Histogram Equalisation + ResNet-50
+        \addplot[style={teal,fill=teal!30},every node near coord/.append style={rotate=0, anchor=west,inner xsep=-3pt}]
+            coordinates {(CPU, 12.29) (GPU, 5.83) (FPGA, 7.16)}; % Gaussian Filter + MobilnetV2
+        \addplot[style={ppink,fill=ppink!30},every node near coord/.append style={rotate=0, anchor=west,inner xsep=-5pt}]
+            coordinates {(CPU, 44.81) (GPU, 9.59) (FPGA, 13.79)}; % RGB2Gray + InceptionV3
+
+        % \legend{R2G Total, Gaussian Total, Box Total, Median Total, Sobel Total, Resize Total, Addition Total, Subtraction Total, Erode Total, Dilate Total, Gamma Total}
+        
     \end{axis}
 \end{tikzpicture}
 
-%, Dilate, Gamma Corr., Linearization,White Balance,GEMM, FFT, STREAM, Demosaicing
+

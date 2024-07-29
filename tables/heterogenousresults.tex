@@ -1,32 +1,30 @@
+\definecolor{Silver}{rgb}{0.752,0.752,0.752}
 \begin{table}
 \centering
-\setlength{\extrarowheight}{0pt}
-\addtolength{\extrarowheight}{\aboverulesep}
-\addtolength{\extrarowheight}{\belowrulesep}
-\setlength{\aboverulesep}{0pt}
-\setlength{\belowrulesep}{0pt}
-\caption{Results Table of Pipelines on Heterogeneous Platform}
-\label{tab:heterogenoussummary}
-\arrayrulecolor{black}
+\caption{Results Table of Pipelines on a Heterogeneous Platform. Total Runtime includes device and model initialisation.}
+\label{tab:Individualsummary}
 \resizebox{\linewidth}{!}{%
-\begin{tabular}{c|c|l|l|c|l|l|c|l|l|l|l|l} 
-\toprule
-\rowcolor[rgb]{0.753,0.753,0.753} {\cellcolor[rgb]{0.753,0.753,0.753}} & \multicolumn{12}{c}{\textbf{Heterogeneous Architecture (ms)}} \\ 
-\hhline{>{\arrayrulecolor[rgb]{0.753,0.753,0.753}}->{\arrayrulecolor{black}}------------}
-\rowcolor[rgb]{0.753,0.753,0.753} {\cellcolor[rgb]{0.753,0.753,0.753}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Accelerator for}\\\textbf{ Partitioned Operation}\end{tabular}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{~ Total }\\\textbf{Runtime (ms)}\end{tabular}} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}>{\cellcolor[rgb]{0.753,0.753,0.753}}c@{}}\textbf{Total}\\\textbf{Energy usage}\\\textbf{(Joules)}\end{tabular}} & \multicolumn{3}{l}{\textbf{Frames per Second}} \\ 
-\hhline{>{\arrayrulecolor[rgb]{0.753,0.753,0.753}}->{\arrayrulecolor{black}}------------}
-\rowcolor[rgb]{0.851,0.851,0.851} \multirow{-3}{*}{{\cellcolor[rgb]{0.753,0.753,0.753}}\textbf{Algorithm}} & \multicolumn{1}{l|}{CPU} & GPU & FPGA & \multicolumn{1}{l|}{CPU} & GPU & FPGA & \multicolumn{1}{l|}{CPU} & GPU & FPGA & CPU & GPU & FPGA \\ 
-\hline
-Histogram Equalisation + ResNet-18 & x &  &  &  &  &  &  &  &  &  &  &  \\ 
-\cmidrule{1-1}\cline{2-13}
- &  &  &  &  &  &  &  &  &  &  &  &  \\ 
-\cmidrule{1-1}\cline{2-13}
- &  &  &  &  &  &  &  &  &  &  &  &  \\ 
-\cmidrule{1-1}\cline{2-13}
- &  &  &  &  &  &  &  &  &  &  &  &  \\ 
-\cmidrule{1-1}\cline{2-13}
- &  &  &  &  &  &  &  &  &  &  &  &  \\
-\bottomrule
-\end{tabular}
+\begin{tblr}{
+  cells = {c},
+  row{1} = {Silver},
+  row{2} = {Silver},
+  cell{1}{1} = {r=2}{},
+  cell{1}{2} = {c=3}{},
+  cell{1}{5} = {r=2}{},
+  cell{1}{6} = {r=2}{},
+  cell{1}{7} = {r=2}{},
+  cell{1}{8} = {r=2}{},
+  cell{1}{9} = {r=2}{},
+  cell{1}{10} = {r=2}{},
+  vlines,
+  hline{1,3-6} = {-}{},
+  hline{2} = {2-4}{},
+}
+\textbf{Pipeline} & {\textbf{Accelerator for}\\\textbf{ Partitioned Operation}} &  &  & {\textbf{~ Kernel}\\\textbf{Runtime (ms)}} & {\textbf{Kernel Energy}\\\textbf{(Joules)}} & {\textbf{Kernel}\\\textbf{Frames per }\\\textbf{Second} (\textbf{FPS})} & {\textbf{Total }\\\textbf{Runtime}\\\textbf{(ms)}} & {\textbf{Total }\\\textbf{Energy}\\\textbf{(Joules)}\\\textbf{}} & {\textbf{Accuracy}\\\textbf{(\%)}}\\
+ & CPU & GPU & FPGA &  &  &  &  &  & \\
+{Histogram \\Equalisation \\+ ResNet-50} & x & Resnet-50 & Hist. & 7.11 & 0.27 & 140.65 & 253.61 & 17.75 & 87\\
+{Gaussian Filter\\+ MobilnetV2} & x & MobilnetV2 & Gaus. & 5.22 & 0.17 & 191.57 & 68.17 & 4.85 & 82\\
+{RGB2Gray\\+ InceptionV3} & x & InceptionV3 & R2G. & 8.44 & 0.035 & 118.48 & 189.22 & 13.24 & 84
+\end{tblr}
 }
 \end{table}

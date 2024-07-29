@@ -6,7 +6,7 @@
 
 \usepackage{algorithm}
 \usepackage{algorithmic}
-
+\usepackage{comment}
 \usepackage{color}
 \usepackage{tabularray}
 \definecolor{Silver}{rgb}{0.752,0.752,0.752}
@@ -21,6 +21,14 @@
 \pgfplotsset{compat=1.3}
 \usepackage{booktabs}
 \usepackage{hhline}
+\usepackage{float}
+\usepackage[table,xcdraw]{xcolor} % Needed for coloring tables
+\usepackage{caption}
+\usepackage{tabularray}
+
+
+
+
 
 \definecolor{Gray1}{gray}{0.9}
 \definecolor{Gray2}{gray}{0.8}
@@ -29,7 +37,7 @@
 \definecolor{bbrown}{HTML}{826441}
 \definecolor{peridot}{rgb}{0.9, 0.89, 0.0}
 \definecolor{richlavender}{rgb}{0.67, 0.38, 0.8}
-
+\definecolor{Silver}{rgb}{0.752,0.752,0.752}
 
 \definecolor{forestgreen}{rgb}{0.0, 0.27, 0.13}
 \definecolor{darkcandyapplered}{rgb}{0.64, 0.0, 0.0}
@@ -46,14 +54,14 @@
 
 \title{Scheduling algorithms on heterogeneous architecture for efficient vision systems }
 
-\author[a,b]{Teymoor Ali. }
+\author[a]{Teymoor Ali. }
 \author[a,b]{George Paul. }
 \author[a]{Deepayan Bhowmik.}
 \author[b]{Robert Nicol.}
 \affil[a]{Newcastle University, 1 Science Square, Newcastle upon Tyne, U.K}
 \affil[b]{STMicroelectronics, 1 Tanfield, Inverleith Row, Edinburgh, U.K}
 
-\authorinfo{Further author information: (Send correspondence to T. Ali)\\T. Ali: E-mail: Teymoor.A@outlook.com, \\  B.B.A.: E-mail: bba@cmp.com, Telephone: +33 (0)1 98 76 54 32}
+\authorinfo{Further author information: (Send correspondence to T. Ali)\\T. Ali: E-mail: Teymoor.A@outlook.com, \\  G.P E-mail: George.Paul@newcastle.ac.uk.}
 
 % Option to view page numbers
 \pagestyle{empty} % change to \pagestyle{plain} for page numbers   
@@ -63,29 +71,31 @@
 \maketitle
 
 \begin{abstract}
-Deep Neural Network (DNN) algorithms have become ubiquitous within the vision domain, encompassing various tasks, including object detection, segmentation, and classification. However, executing complex DNN algorithms on real-time vision systems demands better energy efficiency, runtime, and accuracy requirements. The growing demand for image processing algorithms on systems with resource and energy constraints requires architectures that perform tasks efficiently. Traditionally, embedded imaging designs often involve implementing image processing algorithms on homogeneous architectures, which come with hardware limitations. This has led to innovative computing architectures, leveraging heterogeneity that combines CPUs, GPUs, FPGAs, and other accelerators into a single processing fabric. This design choice allows applications to utilise the most efficient architecture for a given algorithm. In image processing, the advantages of GPUs facilitate the acceleration of highly parallel and memory-intensive tasks such as training and inference of convolutional neural networks (CNNs). On the other hand, FPGAs offer a reconfigurable architecture composed of configurable logic blocks (CLBs) interconnected by programmable routing resources, enabling custom designs tailored to specific imaging algorithms. These CLBs, consisting of look-up tables (LUTs), flip-flops, and multipliers, support a variety of logical and arithmetic operations, while dedicated memory blocks (BRAM) and digital signal processing (DSP) slices optimise multiply-and-accumulate operations.
+Deep Neural Network (DNN) algorithms have become ubiquitous within the vision domain, encompassing various tasks, including object detection, segmentation, and classification. However, executing complex DNN algorithms on real-time vision systems demands better energy efficiency, runtime, and accuracy requirements. The growing demand for image processing algorithms on systems with resource and energy constraints requires architectures that perform tasks efficiently. Traditionally, embedded imaging designs often involve implementing image processing algorithms on homogeneous architectures, which have hardware limitations. This has led to innovative computing architectures, leveraging heterogeneity that combines CPUs, GPUs, FPGAs, and other accelerators into a single processing fabric. This design choice allows applications to utilise the most efficient architecture for a given algorithm.
 
-However, scheduling and partitioning algorithms remains an arduous task, particularly when distributing operations among accelerators with different compute paradigms. This challenge requires a balance, considering important factors such as computational power, memory bandwidth, and communication overhead. In addition, scheduling tasks involves determining the order in which tasks are executed while considering factors such as task dependencies, resource availability, and synchronisation. Current state-of-the-art deep learning libraries are primarily designed to target single architectures for model deployment and often lack mechanisms to intelligently partition an algorithm's sub-operations across the most suitable processor. In this paper, we present a scheduler targeting heterogeneous vision systems, which carefully fine-grain partitions and maps sub-operations of widely used convolutional neural networks and image processing algorithms. Our experiments reveal that the scheduled partitioned algorithms perform better in energy and runtime efficiency than their best-performing homogeneous components executing the complete algorithm.
+%In image processing, the advantages of GPUs facilitate the acceleration of highly parallel and memory-intensive tasks such as training and inference of convolutional neural networks (CNNs). On the other hand, FPGAs offer a reconfigurable architecture composed of configurable logic blocks (CLBs) interconnected by programmable routing resources, enabling custom designs tailored to specific imaging algorithms. These CLBs, consisting of look-up tables (LUTs), flip-flops, and multipliers, support a variety of logical and arithmetic operations, while dedicated memory blocks (BRAM) and digital signal processing (DSP) slices optimise multiply-and-accumulate operations.
+
+However, scheduling and partitioning algorithms remain an arduous task, particularly when distributing operations among accelerators with different computing paradigms. This challenge requires a balance, considering important factors such as computational power, memory bandwidth, and communication overhead. In addition, scheduling tasks involves determining the order in which tasks are executed while considering factors such as task dependencies, resource availability, and synchronisation. Current state-of-the-art deep learning libraries are primarily designed to target single architectures for model deployment and often lack mechanisms to intelligently partition an algorithm's sub-operations across the most suitable processor. This paper presents a scheduler targeting heterogeneous vision systems, which carefully fine-grain partitions and maps sub-operations of widely used convolutional neural networks and image processing algorithms. Our experiments reveal that the scheduled partitioned algorithms perform better in energy and runtime efficiency than their best-performing homogeneous components executing the complete algorithm.
 \end{abstract}
 
 % Include a list of keywords after the abstract 
-\keywords{Heterogeneous Computing, Computer Vision, FPGA-GPU}
+\keywords{Heterogeneous Computing, Computer Vision, FPGA-GPU, Heterogenous Scheduler}
 
 
 \section{INTRODUCTION}
 \label{sec:intro}
-Vision systems have increasing become pervasive in many application domains, particularly those utilising deep learning (DL) algorithms. However, many systems have low-SWaP (Size, Weight, and Power) constraints, which add further complexity and limit the available resources. Traditionally, most hardware architectures are composed of homogeneous compute units, coupled with fixed memory hierarchies such as Central Processing Units (CPUs) or Graphics Processing Units (GPUs). Although, these architecture compute specific algorithms efficiently but in some cases performance is traded off for flexibility leading to poorer execution for operations that do not fit the design.
+Vision systems have increasingly become pervasive in many application domains, particularly those utilising deep learning (DL) algorithms such as Satellites \cite{10.1145/2491956.2462176}, Autonomous Vehicles \cite{kuutti2020survey}, and Remote Sensing \cite{YUAN2020111716}. However, many of these systems face low-SWaP (Size, Weight, and Power) constraints, adding further complexity and limiting available resources. Traditionally, most hardware architectures are composed of homogeneous compute units coupled with fixed memory hierarchies, such as Central Processing Units (CPUs) or Graphics Processing Units (GPUs). While these architectures compute specific algorithms efficiently, in some cases, performance is traded off for flexibility, leading to poorer execution for operations that do not fit the design. This rigidity becomes particularly problematic when deploying deep learning models with diverse computational needs. The diverse operators within deep learning and image processing workloads, ranging from convolutional layers to recurrent networks, often exhibit varying levels of parallelism and memory access patterns.
 
-Heterogeneous architectures have shown as a potential path forward in order to keep up with the rising demand for better performance. This hardware paradigm integrates various compute accelerators together to form a single compute fabric sharing resource whilst leveraging their unique processing characteristics. Computer vision algorithms are composed of various image processing and deep learning algorithms which form a pipeline. GPUs, with their massively parallel architecture consisting of thousands of cores, streaming multiprocessors (SMs), and single instruction multiple data (SIMD) units, excel at accelerating pixel-level computations. Their specialised hardware, such as texture units for efficient image filtering and high-bandwidth memory interfaces for fast data access, enables fast execution of pixel processing streams. 
+Heterogeneous architectures have been shown as a potential path forward to keep up with the rising demand for better performance. This hardware paradigm integrates various compute accelerators to form a single compute fabric, sharing resources whilst leveraging their unique processing characteristics. Computer vision algorithms comprise various image processing and deep learning algorithms, forming a pipeline. GPUs, with their massively parallel architecture consisting of thousands of cores, streaming multiprocessors (SMs), and single instruction multiple data (SIMD) units, excel at accelerating pixel-level computations. Their specialised hardware, such as texture units for efficient image filtering and high-bandwidth memory interfaces for fast data access, enables fast execution of pixel processing streams. 
 
-FPGAs brings its own unique advantages for imaging tasks due to their inherent flexibility and configurable architecture. Unlike fixed-function processors, FPGAs offer the capability to tailor specific image processing algorithms through hardware-level customisation, leveraging programmable logic blocks, custom memory hierarchy, and digital signal processing (DSP) slices. This level of customisation enables the development of highly optimised image processing pipelines finely tuned to specific requirements. Furthermore, FPGAs employ a versatile routing architecture that can be configured to efficiently manage dataflow between operations. This fine-grained control over routing allows data to be directed through the configurable logic fabric with minimal latency. This customisation capability allows for low-latency, real-time processing of image streams. Neural Processing Units often incorporate specialised hardware units, such as systolic arrays or matrix multiplication engines, optimised for the core mathematical operations found in deep neural networks.
+In addition, FPGAs bring their own unique advantages for imaging tasks due to their inherent flexibility and configurable architecture. Unlike fixed-function processors, FPGAs offer the capability to tailor specific image processing algorithms through hardware-level customisation, leveraging programmable logic blocks, custom memory hierarchy, and digital signal processing (DSP) slices. This level of customisation enables the development of highly optimised image processing pipelines finely tuned to specific requirements. Furthermore, FPGAs employ a versatile routing architecture that can be configured to efficiently manage dataflow between operations. This fine-grained control over routing allows data to be directed through the configurable logic fabric with minimal latency. This customisation capability allows for low-latency, real-time processing of image streams. Neural Processing Units often incorporate specialised hardware units, such as systolic arrays or matrix multiplication engines, optimised for the core mathematical operations found in deep neural networks.
 
-Futhermore, as deep neural networks increase in architectural complexity and model size, they demand significant memory resources to store their weights, posing challenges for implementation on low-resource and energy-constrained platforms. Despite these challenges, true heterogeneous computing offers a pathway to developing runtime and power-efficient designs. By exploiting architectures with sufficient resources and processing capabilities, it is possible to achieve high-performance computation while adhering to the constraints of resource-limited environments.
+Furthermore, as deep neural networks increase in architectural complexity and model size, they demand significant memory resources to store their weights, posing challenges for implementation on resource and energy constrained platforms. Despite these challenges, true heterogeneous computing offers a pathway to developing runtime and power-efficient designs. By exploiting architectures with sufficient resources and processing capabilities, it is possible to achieve high-performance computation while adhering to the constraints of resource-limited environments.
 
-Deep learning frameworks such as TensorFlow\cite{tensorflow2015} and PyTorch\cite{Pytorch} provide high-level APIs and abstractions to simplify model development and deployment. These frameworks utilise graph-based intermediate representations (IR) like XLA or TorchScript to enable optimisations and portability across different hardware platforms. Machine learning compilers like TVM\cite{chen2018} or MLIR\cite{mlir} further optimise these IRs for specific targets, leveraging techniques such as operator fusion, memory layout optimisation, and kernel specialisation. However, the current tools often revolves around a single backend, such as CUDA for GPUs. While this simplifies development for specific hardware, it limits the ability to exploit the heterogeneity.
+Deep learning frameworks such as TensorFlow\cite{tensorflow2015} and PyTorch\cite{Pytorch} provide high-level APIs and abstractions to simplify model development and deployment. These frameworks utilise graph-based intermediate representations (IR) like XLA or TorchScript to enable optimisations and portability across different hardware platforms. Machine learning compilers like TVM\cite{chen2018} or MLIR\cite{mlir} further optimise these IRs for specific targets, leveraging techniques such as operator fusion, memory layout optimisation, and kernel specialisation. However, the current tools often revolve around a single backend, such as CUDA for GPUs. While this simplifies development for specific hardware, it limits the ability to exploit the heterogeneity.
 
 
-In this paper, we develop a scheduler that partitions computer vision pipelines and their sub-algorithms into suitable architectures, optimising for performance and energy efficiency. Subgraphs are generated from PyTorch for each selected pipeline, allowing distinct segments of the algorithms to be independently executed on various accelerators, thus leveraging the strengths of heterogeneous systems. We evaluate the performance of these partitioned pipelines and compare them to their discrete accelerator counterparts, analysing key metrics such as inference time, energy consumption, and accuracy. Additionally, our schedulers performance is benchmarked against other ML compilers, such as TVM. The feasibility and benefits of this approach offers key insights into optimal deployment strategies for computer vision pipelines on heterogeneous hardware platforms.
+In this paper, we develop a scheduler that partitions computer vision pipelines and their sub-algorithms into suitable architectures, optimising performance and energy efficiency. Subgraphs are generated from PyTorch for each selected pipeline, allowing distinct segments of the algorithms to be independently executed on various accelerators, thus leveraging the strengths of heterogeneous systems. We evaluate the performance of these partitioned pipelines and compare them to their discrete accelerator counterparts, analysing key metrics such as inference time, energy consumption, and accuracy. Additionally, the scheduler's performance is benchmarked against other ML compilers, such as TVM. The feasibility and benefits of this approach offer key insights into optimal deployment strategies for computer vision pipelines on heterogeneous hardware platforms.
 
 % Convolutional Neural Networks (CNNs)  are prevalent in various domains, including object detection\cite{zhao2012flip}, image classification\cite{rawat2017deep}, and image segmentation\cite{minaee2021image}. These image processing algorithms are generally designed and implemented on GPUs, which feature thousands of compute cores coupled with high-bandwidth memory. This configuration enables efficient execution of Single Instruction, Multiple Data (SIMD) operations, making GPUs ideal for parallel processing of extensive data sets. However, the execution of algorithms on GPUs involves trade-offs in power consumption, physical size, and latency\cite{PouSamSad}.
 
@@ -93,11 +103,12 @@ In this paper, we develop a scheduler that partitions computer vision pipelines 
 
 The main contributions of this paper are as follows:
 \begin{itemize}
-\item Development of a heterogeneous scheduler for computer vision pipelines, enabling task allocation to a selected compute unit and facilitating direct memory access (DMA) operations between GPU and FPGA accelerators.
-\item Optimised deployment of computer vision pipelines on heterogeneous architectures, demonstrating improved computational throughput and reduced energy consumption compared to homogeneous accelerator solutions.
-\item Comprehensive benchmarking and evaluation of computational graphs generated by machine learning frameworks (Apache TVM, PyTorch) across a heterogeneous system, including CPUs, GPUs, and FPGAs.
+\item Development of a heterogeneous scheduler for computer vision pipelines, enabling task allocation to a selected compute unit and facilitating direct memory access operations between GPU and FPGA.
+\item Optimised deployment of computer vision pipelines on heterogeneous architectures, demonstrating improved throughput and reduced energy consumption compared to homogeneous accelerator solutions.
+\item Comprehensive benchmarking and evaluation of algorithms generated by machine learning frameworks (ONNX, PyTorch) across a heterogeneous system, including CPUs, GPUs, and FPGAs.
 \end{itemize}
 
+\newpage
 
 
 \section{RELATED WORK}
@@ -109,46 +120,32 @@ The main contributions of this paper are as follows:
 
 
 
-\noindent\textbf{Partitioning.} algorithms for heterogeneous architectures require careful balancing diverse of computing elements and managing resource dependencies\cite{shekhar2015}. one work introduced StreamBlocks, a software based FPGA compiler that simplifies partitioning tasks across heterogeneous CPU/FPGA platforms but noted the difficulty of achieving an optimal division without extensive profiling and code modifications \cite{emami2022}. Another study addressed the problem of optimising data-parallel applications on heterogeneous HPC platforms by proposing a model-based partitioning algorithm that tackles the intricacies of resource contention and NUMA effects, although this algorithm requires detailed profiling \cite{khaleghzadeh2018}. Further research emphasised the energy and performance trade-offs in workload partitioning, demonstrating that effective utilisation of heterogeneous processors requires sophisticated balancing strategies \cite{tang2017}. Other research has explored prioritising the energy efficiency of accelerators when partitioning tasks in heterogeneous computing environments. Hamano et al.\cite{Hamano} proposed a power-aware dynamic task allocation strategy for heterogeneous clusters of CPUs and GPUs, aiming to minimise the Energy-Delay Product (EDP). The approach priorities energy efficiency by initially assigning tasks to the lowest-power resources and then selectively offloading tasks with high acceleration potential to other resources to reduce processing time. However, this method may lead to excessive energy consumption when minimising processing time, even if the application does not require instant processing. Task partitioning offers a more fine-grained scheduling approach by dividing tasks into sub-tasks and assigning them to suitable resources. Inta et al.\cite{IntBowDav12} presented a static partitioning method for FPGA-GPU hybrid systems. However, such methods can introduce additional delays due to the processing time differences between FPGAs and GPUs, potentially causing the system to miss service deadlines. Oh et al.\cite{OhHanYan18} improved the scheduling method to consider both energy consumption and compliance with the latency limitation of
+\noindent\textbf{Partitioning.} algorithms for heterogeneous architectures require careful balancing diverse of computing elements and managing resource dependencies\cite{shekhar2015}. one work introduced StreamBlocks, a software based FPGA compiler that simplifies partitioning tasks across heterogeneous CPU/FPGA platforms but noted the difficulty of achieving an optimal division without extensive profiling and code modifications \cite{emami2022}. Another study addressed the problem of optimising data-parallel applications on heterogeneous HPC platforms by proposing a model-based partitioning algorithm that tackles the intricacies of resource contention and NUMA effects, although this algorithm requires detailed profiling \cite{khaleghzadeh2018}. Further research emphasised the energy and performance trade-offs in workload partitioning, demonstrating that effective utilisation of heterogeneous processors requires sophisticated balancing strategies \cite{tang2017}. Other research has explored prioritising the energy efficiency of accelerators when partitioning tasks in heterogeneous computing environments. Hamano et al.\cite{Hamano} proposed a power-aware dynamic task allocation strategy for heterogeneous clusters of CPUs and GPUs, aiming to minimise the Energy-Delay Product (EDP). The approach prioritises energy efficiency by initially assigning tasks to the lowest-power resources and then selectively offloading tasks with a high acceleration potential to other resources to reduce processing time. However, this method may lead to excessive energy consumption when minimising processing time, even if the application does not require instant processing. Task partitioning offers a more fine-grained scheduling approach by dividing tasks into sub-tasks and assigning them to suitable resources. Inta et al.\cite{IntBowDav12} presented a static partitioning method for FPGA-GPU hybrid systems. However, such methods can introduce additional delays due to the processing time differences between FPGAs and GPUs, potentially causing the system to miss service deadlines. Oh et al.\cite{OhHanYan18} improved the scheduling method to consider both energy consumption and compliance with the latency limitation of
 the application at the same time.
 
-\noindent\textbf{Scheduling.} tasks across heterogeneous systems comes with additional challenges related to communication and memory latency. Scheduling involves efficiently allocating computational tasks across various types of processing units such as CPUs, GPUs, FPGAs, and other specialised hardware. This scheduling aims to optimise performance, resource utilisation, and energy efficiency by leveraging the distinct strengths of each hardware type. Several works have explored the deployment of algorithms for heterogeneous architectures on edge and HPC domain\cite{KheHardMue24,RatGouHog23}.  Nupur et al\cite{SumRaw22}, presented a optimal partitioning approach to map a CNN model across heterogeneous architectures by leveraging performance measurement benchmarks. The proposed framework, Hetero-vis, decides optimal partitions and mapping of a CNN network across different accelerators to minimise the inference latency. Despite progress, current deep learning libraries often target one backed, lacking mechanisms to intelligently partition and distribute tasks across various processors. This gap requires the development of schedulers that can dynamically allocate resources based on the computational requirements and available hardware\cite{KanLeeKil21, LanBhaSou2016}.
+\noindent\textbf{Scheduling.} tasks across heterogeneous systems come with additional challenges related to communication and memory latency. Scheduling involves efficiently allocating computational tasks across various processing units such as CPUs, GPUs, FPGAs, and other specialised hardware. This scheduling aims to optimise performance, resource utilisation, and energy efficiency by leveraging the distinct strengths of each hardware type. Several works have explored the deployment of algorithms for heterogeneous architectures on edge and HPC domain\cite{KheHardMue24,RatGouHog23}.  Nupur et al\cite{SumRaw22}, presented a optimal partitioning approach to map a CNN model across heterogeneous architectures by leveraging performance measurement benchmarks. The proposed framework, Hetero-vis, decides optimal partitions and mapping of a CNN network across different accelerators to minimise the inference latency. Despite progress, current deep learning libraries often target one backend, lacking mechanisms to partition and distribute tasks across various processors intelligently. This gap requires the development of schedulers that can dynamically allocate resources based on the computational requirements and available hardware\cite{KanLeeKil21, LanBhaSou2016}.
 
-\noindent\textbf{Compiler Frameworks}. such as TVM and PyTorch, employ sophisticated techniques for optimising and transforming deep learning models. TVM utilises graph optimisation, kernel fusion, and hardware-specific code generation to achieve efficient execution across various hardware platforms \cite{chen2018}. Similarly, PyTorch integrates dynamic computational graphs with JIT compilation and custom kernel optimisation to enhance model performance on diverse architectures \cite{Pytorch}. These compilers aim to bridge the gap between high-level model specification and efficient hardware execution, enabling improvements in model inference speed and resource utilisation. A framework utilising polyhedral model was proposed by Baghdadi et al.\cite{BagRiyRay19} to generate high performance code for many backends. Its design separates computation into four intermediate representations: algorithms, loop transformations, data layouts, and communication. Other approaches employ a two-phase search algorithm, hierarchical sampling, and memorisation of repeated partial schedules to address scalability challenges. These optimisations results have shown compile-time speedups and performance improvement\cite{Halide2018}.
-
-% Task partitioning is a crucial step in scheduling, involving the decomposition of a computer vision algorithm into smaller tasks or kernels that can be independently executed. Each task is assigned to the most appropriate hardware unit based on its computational characteristics. For instance, compute-intensive tasks might be assigned to GPUs, while tasks requiring custom parallelism and low latency could be assigned to FPGAs. Efficient resource management is essential to prevent bottlenecks and ensure optimal performance. This involves dynamically managing computational resources such as processing power and memory bandwidth across different hardware units \cite{YouJooDon19}.
-
-% Static scheduling is one approach where the allocation of tasks to hardware units is determined at compile time. This method relies on a prior knowledge of the algorithm and hardware characteristics. Static scheduling offers predictability, ensuring consistent performance and resource usage, which is crucial for real-time computer vision applications. However, it is less flexible in adapting to dynamic changes in workload or system state. In contrast, dynamic scheduling involves the runtime allocation of tasks, allowing the system to adapt to current conditions and workload variations. While dynamic scheduling offers greater flexibility and can dynamically balance the load across hardware units, it introduces runtime overhead due to the need for continuous monitoring and decision-making \cite{KanLeeKil21}.
-
-% Hybrid scheduling combines the benefits of both static and dynamic approaches. Initially, tasks are allocated statically, with dynamic adjustments made as needed based on runtime conditions. This approach aims to achieve a balance between predictability and flexibility.
-
-% Several challenges arise in scheduling for heterogeneous platforms. Load balancing is critical to ensure that no single hardware unit becomes a bottleneck while others remain underutilised. Effective load balancing improves throughput and reduces latency. Minimising communication overhead is another challenge, as it involves reducing the data transfer time between different hardware units, especially when tasks require intermediate results from other units. Managing resource contention is essential to avoid performance degradation due to competition for shared resources such as memory bandwidth. Scalability is another challenge, requiring scheduling algorithms that can efficiently scale with the increasing number of hardware units and the complexity of computer vision algorithms. Additionally, optimising energy efficiency is crucial for battery-powered and environmentally sensitive applications, requiring careful balancing of the computational load to minimise energy consumption.
-
-% Several practical applications illustrate the importance of scheduling in heterogeneous platforms. In real-time object detection, tasks such as image preprocessing, feature extraction, and object classification can be scheduled across CPUs, GPUs, and FPGAs to achieve real-time performance. In autonomous vehicles, tasks like sensor data fusion, obstacle detection, and path planning are distributed across heterogeneous platforms to ensure timely and reliable decision-making. Smart cameras utilise FPGAs for low-latency image processing and GPUs for complex parallelisable analysis tasks, while CPUs handle control logic and communication.
-
-% In works by \cite{17} introduced Clockwork, a new algorithm for compiling image processing applications on FPGAs using a combination of polyhedral analysis and synchronous dataflow (SDF). Clockwork compiles the entire application into a single, flat, statically scheduled module, eliminating the resource and energy overhead associated with inter-stage FIFOs. Designs generated by Clockwork achieve substantial reductions in LUTs, flip-flops, and BRAMs compared to state-of-the-art stencil compilers while handling a wider range of access patterns. Clockwork's resource efficiency and scalability make it highly competitive, achieving energy efficiencies significantly greater than those of CPUs and GPUs for multi-stage applications.
-
-% Despite these advancements, none of the existing technologies support true heterogeneous scheduling where a single algorithm is executed on multiple accelerators with direct communication between them. Current approaches either statically schedule tasks to specific hardware units or dynamically adjust at runtime, but they do not facilitate direct inter-accelerator communication. This limitation poses challenges in fully exploiting the potential of heterogeneous platforms, as it prevents seamless integration and coordination of diverse processing units to work collaboratively on a single algorithm. 
-
-% In conclusion, effective scheduling is critical for deploying computer vision algorithms on heterogeneous hardware platforms. It involves balancing computational load, minimising communication overhead, managing resource contention, ensuring scalability, and optimising energy efficiency. Advances in scheduling algorithms and frameworks, such as those presented by \cite{16} and \cite{17}, continue to enhance the performance and efficiency of computer vision systems deployed on heterogeneous hardware platforms. However, the challenge of achieving true heterogeneous scheduling with direct inter-accelerator communication remains an open area for future exploration.
+\noindent\textbf{Compiler Frameworks}. such as TVM and PyTorch, employ sophisticated techniques for optimising and transforming deep learning models. TVM utilises graph optimisation, kernel fusion, and hardware-specific code generation to execute efficiently across various hardware platforms \cite{chen2018}. Similarly, PyTorch integrates dynamic computational graphs with JIT compilation and custom kernel optimisation to enhance model performance on diverse architectures \cite{Pytorch}. These compilers aim to bridge the gap between high-level model specification and efficient hardware execution, improving model inference speed and resource utilisation. A framework utilising a polyhedral model was proposed by Baghdadi et al.\cite{BagRiyRay19} to generate high-performance code for many backends. Its design separates computation into four intermediate representations: algorithms, loop transformations, data layouts, and communication. Other approaches employ a two-phase search algorithm, hierarchical sampling, and memorisation of repeated partial schedules to address scalability challenges. These optimisation results have shown compile-time speedups and performance improvement\cite{Halide2018}.
 
 
-
-\section{METHODOLOGY}
+\section{PIPELINE AND SCHEDULER DESIGN}
 \label{sec:methodology}
 
-This section details the heterogeneous deployment of computer vision pipelines that combines OpenCV-based image processing with a Convolutional Neural Network (CNN) classifier, utilising PyTorch as the framework for describing the pipeline. 
+This section details the heterogeneous deployment of computer vision pipelines that combine OpenCV-based image processing with a Convolutional Neural Network (CNN) classifier, utilising PyTorch as the framework for describing the pipeline. 
 
-
-The computational graph generated from the PyTorch algorithm includes both the image processing and classifier stages. The graph is manually partitioned by the programmer to allocate tasks across the GPU and FPGA, with both accelerators being utilised for any task based on availability. This approach involves executing image processing on either the GPU or FPGA and performing inference on whichever accelerator is free, using Direct Memory Access (DMA) to efficiently transfer processed image frames between the GPU and FPGA. The primary objective is to optimise runtime, frames per second (FPS), latency, and energy consumption, demonstrating that this heterogeneous approach is superior to the traditional homogeneous approach where both image processing and inference are executed entirely on either GPU or FPGA.
-
-
+The computational graph generated from the PyTorch algorithm includes both the image processing and classifier stages. The graph is manually partitioned by the programmer to allocate tasks across the GPU and FPGA, with both accelerators being utilised for any task based on availability. This approach involves executing image processing on either the GPU or FPGA and performing inference on whichever accelerator is free, using Direct Memory Access (DMA) to efficiently transfer processed image frames between the GPU and FPGA. The primary objective is to optimise runtime, frames per second (FPS), latency, and energy consumption, demonstrating that this heterogeneous approach is superior to the traditional homogeneous approach where both image processing and inference are executed entirely on GPU or FPGA.
 
 \subsection{Pipeline Overview}
 
-The computer vision pipeline begins with an image processing module using OpenCV, followed by a CNN classifier. Both stages are implemented as a single module in PyTorch. The deployment flow is illustrated in Figure \ref{fig:deployment_flow}.
+The computer vision pipeline begins with an image processing module using OpenCV functions, followed by a CNN classifier. Both stages are implemented as a single module in PyTorch. The deployment flow is illustrated in Figure \ref{fig:deployment_flow}.
 
-\begin{figure}[ht]
+The scheduler splits the graph into sub-operations, assigning them to the most suitable hardware units based on their computational characteristics. In addition, the scheduler is integrated into a deployment framework that works with PyTorch, ONNX Runtime, and the vendor compilers for the target hardware including NVCC and Vitis compilers. Furthermore, peer-to-peer direct memory transfer (DMA) is injected into the generated code to transfer image data from FPGA to GPU buffers without involving the host (CPU). The FPGA scheduling flow takes longer when algorithms have to be synthesised in cases where pre-written IP is not used.
+
+% Perhaps table for TVM vs PyTorch to justify our decision
+Although TVM 0.6 can process ONNX computation graphs, when it was tested as part of the scheduler it performed slower in throughput than PyTorch. TVM incurs significant overhead due to its intermediate representation and compilation steps, which may not be optimised for dynamic control flows. Additionally, TVM may struggle with kernel fusion in complex pipelines. Moreover, while TVM generally optimises CNN channels using the GEMM implementation for 2-D convolution, there are frequent instances where it opts for direct convolution, which is typically slower regardless of the target hardware characteristics \cite{9042000}. Furthermore, TVM may not fully support newer GPU architectures, limiting its efficiency and requiring additional tuning to achieve optimal performance.
+
+
+\begin{figure}[tb]
 \centering
 \includegraphics[width=\textwidth]{images/SPIE_Deployment_Flow.png} 
 \caption{Scheduler Architecture to Partition and Schedule Algorithms onto CPU, GPU, and FPGA.}
@@ -159,15 +156,12 @@ The computer vision pipeline begins with an image processing module using OpenCV
 
 Initially, the pipeline is implemented and validated in PyTorch, including image processing with OpenCV functions and a CNN for classification. To optimise execution on CPUs and GPUs, the PyTorch module is converted to TorchScript, which supports various graph-level optimisations while preserving the model structure for efficient execution.
 
-For deployment on FPGAs, the module is exported to the Open Neural Network Exchange (ONNX) format. ONNX standardises the model representation, facilitating interoperability across different hardware platforms and leveraging the reconfigurable architecture of FPGAs. Additionally, the model undergoes quantisation to reduce precision, optimising power and memory usage, which is particularly beneficial for resource-constrained devices like FPGAs.
+The module is exported to the Open Neural Network Exchange (ONNX) format for deployment on FPGAs. ONNX standardises the model representation, facilitating interoperability across different hardware platforms and leveraging FPGAs' reconfigurable architecture. Additionally, the model undergoes quantisation to reduce precision, optimising power and memory usage, which is particularly beneficial for resource-constrained devices like FPGAs.
 
-\subsection{Scheduler}
-
-\begin{algorithm}
-\caption{Scheduler for GPU/FPGA Code Partitioning}
+\subsection{Heterogeneous Scheduler}
+\begin{algorithm}[]
+\caption{Heterogeneous Scheduler}
 \begin{algorithmic}[1]
-\REQUIRE PythonCode
-\ENSURE Partitioned code for GPU and FPGA with DMA
 
 \STATE \textbf{function} Scheduler(PythonCode)
 \STATE \hspace{1em} Parse PythonCode for pragmas (\texttt{gpu}, \texttt{fpga})
@@ -188,67 +182,73 @@ For deployment on FPGAs, the module is exported to the Open Neural Network Excha
 \STATE \hspace{4em} Append PartitionedCode with GeneratedCode and DMAConfig
 \STATE \hspace{1em} \textbf{return} PartitionedCode
 
-\STATE \textbf{function} GenerateGPUCode(function)
-\STATE \hspace{1em} \textbf{Use} PyTorch to generate GPU code
-\STATE \hspace{1em} \textbf{return} GPUCode
-
-\STATE \textbf{function} PreOptimizedLibraryExists(function)
-\STATE \hspace{1em} \textbf{Check} if a pre-optimized library exists for the function
-\STATE \hspace{1em} \textbf{return} True \textbf{if} exists \textbf{else} False
-
-\STATE \textbf{function} UsePreOptimizedLibrary(function)
-\STATE \hspace{1em} \textbf{Use} pre-optimized library code
-\STATE \hspace{1em} \textbf{return} LibraryCode
-
-\STATE \textbf{function} ConvertToONNX(function)
-\STATE \hspace{1em} \textbf{Convert} the function to ONNX format
-\STATE \hspace{1em} \textbf{return} ONNXCode
-
-\STATE \textbf{function} CompileWithVitis(ONNXCode)
-\STATE \hspace{1em} \textbf{Compile} ONNXCode with Vitis compiler
-\STATE \hspace{1em} \textbf{return} FPGACompiledCode
-
-\STATE \textbf{function} AddDMAToFPGA(FPGACompiledCode)
-\STATE \hspace{1em} \textbf{Add} DMA configuration to FPGACompiledCode to communicate with GPU
-\STATE \hspace{1em} \textbf{return} DMAConfiguredFPGA
-
 \end{algorithmic}
 \end{algorithm}
 
 
+The scheduler is designed to partition Python code and execute operations on GPU and FPGA. To reduce the host communication overhead, the algorithm incorporates remote direct memory access\cite{xilinx_2019, nvidia_2024}. It starts by parsing the input Python code to detect pragmas, specifically looking for \texttt{\#GPU} or \texttt{\#FPGA} directives that indicate the preferred execution platform for each function. If no directives are present, the algorithm defaults to using an internal cost model file, which includes a list of OpenCV functions and specifies the most suitable accelerator for each function. The scheduler employs a FIFO (First In, First Out) approach to ensure that the algorithms are executed in the order they appear in the Python code. As the scheduler parses the input code, it sequentially processes each function according to its pragma directives or performance cost evaluations. The first algorithm encountered is executed first, and the resulting data is then passed on to the next algorithm in line. This method ensures a streamlined and orderly execution flow, where the output from one function serves as the input for the subsequent function, maintaining data continuity and reducing complex data dependency.
+
+For functions marked with a \texttt{\#GPU} pragma, or according to the performance cost evaluation, the scheduler invokes Pytorch to process the computational graph to generate GPU executable code.
+On the other hand, for functions marked with an \texttt{\#FPGA} pragma, the algorithm checks for the availability of pre-optimised libraries (E.g Vitis Vision Library). If a pre-optimised library is found, the \texttt{UsePreOptimizedLibrary} function is called to retrieve and use the library code, thereby reducing compilation and synthesis time. If no such function exists in the library, the code is converted to ONNX computational graph format to be used with TVM flow. The computational graph generated from TVM is synthesised using the Vitis compiler to produce register-transfer-level logic.
+DMA logic and configurations are also manually added to both FPGA and GPU. This step is required as it ensures high-speed data transfer with minimal CPU involvement, leveraging DMA's ability to move data directly between memory and peripherals. 
+
+\subsection{Algorithm Profiling \& Partitioning Strategy}
+To find the most optimal accelerator, each sub-algorithm within a computer vision is profiled manually to develop a primitive cost model. Each algorithm is executed on a CPU, GPU and FPGA and their profiling runtime, FPS and energy consumption for each hardware accelerator are recorded in Figure \ref{fig:IndividualRuntime}, Figure \ref{fig:FPSEnergy} and Table \ref{tab:Individualsummary}. 
+
+\begin{figure}
+    \centering
+\resizebox{0.7\linewidth}{!}{\input{graphs/PartitionStrat}}    %\caption{Execution times for individual and combined algorithms.}
+    \caption[SIFT Power Consumption]{Kernel (Lighter Colour) and Total Runtime (Solid Colour) Comparison of Individual Algorithms and Pipelines on each Hardware Platform. CPU(5900X) GPU(A2000) FPGA(Alveo U50).}
+    \label{fig:IndividualRuntime}
+\end{figure}
+
+In terms of individual algorithm kernel runtimes shown in Figure \ref{fig:IndividualRuntime}, the results reveal that CPUs suffer poorly on high complexity algorithms which require more parallelisation. However, algorithms such as \texttt{RGB2Gray} and \texttt{Resize} exhibit better performance on the CPU than GPU. The lower GPU runtime can be attributed to communication latency when allocating cores takes longer than the processing. The FPGA is shown to perform $1.81\times$ faster than the GPU and $1.79\times$ faster than the CPU in terms of kernel time for \texttt{RGB2GRAY}, \texttt{ Histogram Equalisation} and \texttt{Resize}) algorithms. However, the FPGA is less efficient for the \texttt{Gaussian} Filter algorithm, performing $1.2\times$ slower than the GPU. This inefficiency arises due to the limited number of logic blocks available on the FPGA, which are insufficient to fully parallelise the processing of all pixels. As a result, the FPGA cannot leverage its parallel processing capabilities to the same extent as the GPU, leading to longer kernel runtimes. This highlights a critical trade-off point where the FPGA's hardware constraints limit its performance on more demanding algorithms. In the case of deep learning algorithms, the GPU is $4.21\times$ \& $1.41\times$ faster than the FPGA and CPU, respectively. The convolutional layer, which contains the highest intensity of the operations in a CNN, benefits from the many-core GPU architecture. 
+
+Considering total execution time, the GPU performs poorly, taking in device initialisation, communication, and memory latency overheads. 
+
+This is especially shown for low-complexity algorithms where parallelisation cannot be effectively exploited. On the other hand, the bitstream pre-initialised U50 FPGA waits for incoming data, resulting in minimal latency, which can benefit image sensors streaming pixel data. In addition, the model initialisation takes, on average, $150ms~$ on both CPU and GPU. Moreover, the U50 employs high-bandwidth memory, which can further improve memory-bound algorithms instead of the GDDR6 of the A2000 GPU. 
+
+According to Figure \ref{fig:FPSEnergy}, the Frames Per Second (FPS) results show the impact of CNN algorithms. Large CNN architectures (E.g. Resnet-50, InceptionV3) with deeper layers will involve a lot more operations, additional processing modules and residual connections will also affect overall performance. In relation to energy consumption, the FPGA consumed the least amount of energy per operation for all algorithms. On average, the FPGA is $7.63\times$ and $2.60\times$ more energy efficient than the CPU and GPU. Although the GPU has a higher thermal design power (TDP) than the CPU, the time it takes to execute the algorithm is much lower, resulting in lower overall energy use despite the higher power draw. Algorithms that contain many operations, such as ML and Gaussian, show that the GPU consumes less energy than the CPU.
+
+Referring to the profiling results, the partitioning approach will place the pre-processing algorithms on the FPGA to maximise energy efficiency, while the deep learning algorithm will be deployed on the GPU for runtime. This strategy takes advantage of the FPGA's low initialisation latency and memory coupled with the GPUs parallel processing capability.
 
 
-Efficient deployment across heterogeneous architectures requires careful partitioning and scheduling of the computational graph. The scheduler splits the graph into sub-operations, assigning them to the most suitable hardware units based on their computational characteristics.
 
-CPUs handle control-intensive and sequential tasks, such as initial image processing with OpenCV. GPUs execute highly parallel and memory-intensive tasks, such as CNN layers. FPGAs perform custom-designed, latency-sensitive tasks, which are beneficial for specific image processing operations and optimised CNN inference.
 
-The scheduling algorithm employs both static and dynamic strategies. Static scheduling pre-allocates tasks to hardware units based on a priori knowledge of the computational graph and hardware characteristics, ensuring predictable performance. Dynamic scheduling adjusts task allocation during runtime based on the current workload and system state, providing flexibility and adapting to changing conditions.
+\begin{figure}[tb]
+    \centering
+    \begin{tabular}{cc}
+    \resizebox{0.5\columnwidth}{!}{\input{graphs/IndividualEnergy}} &
+    \resizebox{0.5\columnwidth}{!}{\input{graphs/IndividualFPS}} \\    a & b 
+    \end{tabular}
+    \caption{Algorithmic a) Energy Consumption Comparison of Individual Algorithms, Pipelines and b) Frames per Second on each Hardware Platform. CPU(5900x) GPU(A2000) FPGA(Alveo U50).}
+    \label{fig:FPSEnergy}
+\end{figure}
 
-Our main innovation lies in deploying the pipeline heterogeneously. The image processing tasks can be assigned to either the GPU or FPGA, depending on availability and workload. Similarly, the inference tasks are executed on whichever accelerator is free at the time. This dynamic allocation leverages the GPU for high-throughput tasks and the FPGA for low-latency inference. Efficient data transfer between GPU and FPGA is facilitated using Direct Memory Access (DMA), minimising latency and communication overhead, and enabling real-time data sharing between the accelerators.
 
-The scheduler is integrated into a deployment framework that works with PyTorch, ONNX Runtime, and the vendor compilers for the target hardware including NVCC and the Vitis AI compiler. Theoretically, TVM 0.12 would be well suited to this task but this was not utilised due to its slower performance compared to PyTorch 2.4, which is recorded in table x.
 
-TVM’s optimisation process introduces significant overhead due to its intermediate representation and compilation steps, which are not as streamlined for certain dynamic control flows. PyTorch 2.4's Just-In-Time (JIT) compiler offers more efficient graph optimisations tailored to the specific execution environment, reducing the overhead associated with model transformations. Additionally, TVM struggles with kernel fusion in complex pipelines that involve a mixture of computational patterns, whereas PyTorch 2.4 employs more effective kernel fusion and execution strategies. PyTorch 2.4’s execution engine is highly optimised for both CPU and GPU, leveraging low-level architectural optimisations and reducing runtime overhead, which TVM incurs due to its more general-purpose nature and additional compilation steps.
+% \begin{figure}
+%     \centering
+% \resizebox{0.7\linewidth}{!}{\input{graphs/IndividualEnergy}}    %\caption{Execution times for individual and combined algorithms.}
+%     \caption[SIFT Power Consumption]{Energy Consumption Comparison of Individual Algorithms and Pipelines on each Hardware Platform.}
+%     \label{fig:IndividualPower}
+% \end{figure}
 
-Key components of the implementation include a graph analysis module to identify sub-operations and dependencies in the PyTorch computational graph, a partitioning engine to allocate tasks to appropriate accelerators, and a scheduling module to manage static and dynamic scheduling, ensuring efficient task execution and data transfers. DMA integration enables efficient data transfer between accelerators using DMA and PCIe protocols.
 
-\subsection{Partitioning Strategy}
-In order to find the most optimal 
-
-\input{graphs/PartitionStrat}
 
 
 \section{Experimental Setup}
 \input{tables/PlatformSummary} 
-The proposed partitioning is tested using two developed heterogeneous platforms containing high-low power components, as shown in Table \ref{tab:HWEnvironment}.
+The proposed partitioning is evaluated using a heterogeneous platform containing various hardware components and their software, as shown in Table \ref{tab:HWEnvironment} and Figure \ref{fig:HeterogenousHardware}.
 
 \textbf{Dataset.} The test images used in the experiments are from LIU4K-v2 dataset \cite{LiuliuYan19}, which is a high resolution data-set that includes 2000 $3840\times2160$ images. The images contain a variety of backgrounds and objects. 
 
 
-
 \subsection{Measurement Metrics}
 \subsubsection{Execution time}
-The evaluation of the overall system performance considers both latency and compute factors, reporting performance metrics for total time, inference, and other significant layers while using floating point 16bit precision. The run-time is measured using the host platform's built-in time libraries. The network performance is estimated by executing and averaging the results of 100 images. The frame per second (FPS) metric is computed using Eq. \ref{eq:FPS}: 
+The evaluation of the overall system performance considers both latency and compute factors, reporting performance metrics for total time, inference, and other significant layers while using floating point 16bit precision. The run-time is measured using the host platform's built-in time libraries. The algorithm runtime is collected from executing $1000\times$ and averaged.  
+
+The U50 FPGA, time measurements are captured using the Xilinx Vitis analyser built-in performance counters. On the GPU, CUDA events are utilised to measure time. CUDA events work by recording timestamps at specific points in the code. These timestamps are captured by calling \verb|cudaEventRecord()| at the desired start and stop points of the code. The \verb|cudaEventElapsedTime()| function is then used to calculate the elapsed time between these two events. CUDA events provide high-resolution timing by using the GPU's internal clock, allowing for precise measurement of kernel execution times and other GPU operations with minimal overhead. For the CPU, a C++ library is employed to measure execution time. This library offers high-resolution timing functions such as \verb|std::chrono::high_resolution_clock| to capture start and end times, providing precise timing information for the CPU operations. The frame per second (FPS) metric is computed using Eq. \ref{eq:FPS}: 
 
 \begin{equation}\label{eq:FPS}
 \text{FPS}= 1/\text{Execution Time}.
@@ -262,9 +262,7 @@ Taking the instantaneous power or TDP of a device is not accurate since power co
 E = P \times t
 \end{equation}
 
-The U50 FPGA, time measurements are captured using the Xilinx Vitis analyser built-in performance counters. On the GPU, CUDA events are utilised to measure time. CUDA events work by recording timestamps at specific points in the code. These timestamps are captured by calling \verb|cudaEventRecord()| at the desired start and stop points of the code. The \verb|cudaEventElapsedTime()| function is then used to calculate the elapsed time between these two events. CUDA events provide high-resolution timing by using the GPU's internal clock, allowing for precise measurement of kernel execution times and other GPU operations with minimal overhead. For the CPU, a C++ library is employed to measure execution time. This library offers high-resolution timing functions such as \verb|std::chrono::high_resolution_clock| to capture start and end times, providing precise timing information for the CPU operations.
-
-Power measurements are taken using software based platform-specific tools. For the CPU, \texttt{hwmonitor} is used to sample power usage every 1ms. For the GPU, \texttt{nvidia-smi} is employed to obtain power readings at the same interval. For the U50 FPGA, \texttt{xbutil} is used to monitor power consumption. The power readings are then averaged to provide an accurate measure of energy consumption during the algorithm's execution.
+Power measurements are taken using software based platform-specific tools. For the CPU, \texttt{RAPL} is used to collect energy consumption by using a script which reads the initial and final energy values. For the GPU, \texttt{nvidia-smi} is employed to obtain power readings at the same interval. For the U50 FPGA, \texttt{xbutil} is used to monitor power consumption. The power readings are then averaged to provide an accurate measure of energy consumption during the algorithm's execution.
 
 \subsubsection{Accuracy}
 The accuracy of the proposed system for CNN classification is evaluated using a straightforward metric: the ratio of correctly classified images to the total number of images in the test dataset. This metric provides a clear measure of how well the CNN model performs in terms of correctly identifying the class labels of the input images. The accuracy is calculated using Eq. \ref{eq
@@ -285,61 +283,25 @@ where \( N \) is the total number of pixels, \( I_{\text{pred}}(i) \) is the pre
 
 
 
-\section{Implementation}
-\label{sec:implementation}
-detail the implementation specifics of scheduler
-
-describe the hardware and software setup, the algorithms used for scheduling and partitioning, and any tools or frameworks employed
-
-explain any integration with existing systems or libraries
-
 \section{Results}
-\label{sec:evaluation}
-present the results of experiments
+\label{sec:results}
 
-compare the performance of my heterogeneous system to homogeneous systems in terms of energy efficiency and runtime
+% \begin{figure}
+%     \centering
+% \resizebox{0.7\linewidth}{!}{\input{graphs/HeterogenousResults}}  
+%     \caption{Kernel and Total Runtime  Comparison of Individual Algorithms and Pipelines on each Hardware Platform. CPU(5900X) GPU(A2000) FPGA(Alveo U50).}
+%     \label{fig:HeterogeneousRuntime}
+% \end{figure}
 
-include any metrics or benchmarks used 
-
-provide a thorough analysis and discussion of the results, highlighting the improvements achieved with our scheduler.
-
-
-
-
-% \begin{table}[ht]
-% \caption{Hardware results for inference and data transfer times - Let me know what you want to do with this.} 
-% \label{tab:hardware_results}
-% \begin{center}       
-% \begin{tabular}{|l|p{2.5cm}|p{2.5cm}|p{1.5cm}|p{3cm}|p{3cm}|}
-% \hline
-% \rule[-1ex]{0pt}{3.5ex}  Hardware & Total Inference Time (s) & Average Inference Time (s) & FPS & Total Data Transfer Time (s) & Average Data Transfer Time (s) \\
-% \hline
-% \rule[-1ex]{0pt}{3.5ex}  CPU   & 10.0216 & 0.10022 & 99.78 & N/A & N/A \\
-% \hline
-% \rule[-1ex]{0pt}{3.5ex}  GPU 0 & 2.6352  & 0.002635 & 379.48 & 0.1168 & 0.000117 \\
-% \hline
-% \rule[-1ex]{0pt}{3.5ex}  GPU 1 & 2.6381  & 0.002638 & 379.06 & 0.1610 & 0.000161 \\
-% \hline
-% \rule[-1ex]{0pt}{3.5ex}  FPGA  & - & - & - & - & - \\
-% \hline
-% \end{tabular}
-% \end{center}
-% \end{table}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\begin{figure}[tb]
+    \centering
+    \begin{tabular}{cc}
+    \resizebox{0.48\columnwidth}{!}{\input{graphs/HeterogenousResults}} &
+    \resizebox{0.49\columnwidth}{!}{\input{graphs/HeterogenousEnergy}} \\    a & b 
+    \end{tabular}
+    \caption{Algorithmic a) Energy Consumption Comparison of Individual Algorithms, Pipelines and b) Frames per Second on Heterogenous Platform. CPU(5900x) GPU(A2000) FPGA(Alveo U50).}
+    \label{fig:FPSEnergy}
+\end{figure}
 
 
 
@@ -347,6 +309,7 @@ provide a thorough analysis and discussion of the results, highlighting the impr
 \section{CONCLUSION}
 \label{sec:conclusion}
 
+In conclusion
 summarise the main findings of research
 
 discuss the implications of my work and potential future directions
@@ -375,7 +338,7 @@ Practical demonstrations and applications will be crucial. We will showcase the 
 
 \acknowledgments % equivalent to \section*{ACKNOWLEDGMENTS}       
  
-This unnumbered section is used to identify those who have aided the authors in understanding or accomplishing the work presented and to acknowledge sources of funding.  
+This work was supported in part by the UKRI EPSRC.
 
 % References
 \bibliography{report} % bibliography data in report.bib
