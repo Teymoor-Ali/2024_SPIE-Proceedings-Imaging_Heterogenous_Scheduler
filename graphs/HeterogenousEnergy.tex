@@ -25,11 +25,11 @@
     ]
         % Total Energy Data Plots
         \addplot[style={blue,fill=blue!60}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=20pt}]
-            coordinates {(CPU, 17.30) (GPU, 16.30) (FPGA, 0.82) (Heterogeneous, 15.00)}; % Histogram Equalisation + ResNet-50
+            coordinates {(CPU, 17.30) (GPU, 14.30) (FPGA, 0.82) (Heterogeneous,16.75)}; % Histogram Equalisation + ResNet-50
         \addplot[style={darkcandyapplered,fill=darkcandyapplered}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=20pt}]
-            coordinates {(CPU, 7.80) (GPU, 4.70) (FPGA, 0.51) (Heterogeneous, 5.00)}; % Gaussian Filter + MobilnetV2
+            coordinates {(CPU, 7.80) (GPU, 4.70) (FPGA, 0.51) (Heterogeneous, 4.85)}; % Gaussian Filter + MobilnetV2
         \addplot[style={forestgreen,fill=forestgreen!70}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=20pt}]
-            coordinates {(CPU, 18.33) (GPU, 11.09) (FPGA, 0.45) (Heterogeneous, 12.00)}; % RGB2Gray + InceptionV3
+            coordinates {(CPU, 18.33) (GPU, 11.09) (FPGA, 0.45) (Heterogeneous, 13.24)}; % RGB2Gray + InceptionV3
         \legend{Hist+Resnet50, Gauss+MobilnetV2, R2G+InceptionV3}
     \end{axis}
 
