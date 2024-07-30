@@ -27,7 +27,7 @@
             coordinates {(CPU, 216.16) (GPU, 323.97) (FPGA, 30.72) (Heterogeneous, 253.61)}; % Histogram Equalisation + ResNet-50
         \addplot[style={darkcandyapplered,fill=darkcandyapplered}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=0.9pt}]
             coordinates {(CPU, 97.14) (GPU, 104.30) (FPGA, 18.94) (Heterogeneous, 68.17)}; % Gaussian Filter + MobilnetV2
-        \addplot[style={forestgreen,fill=forestgreen}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=0.9pt}]
+        \addplot[style={forestgreen,fill=forestgreen!70}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=5pt}]
             coordinates {(CPU, 229.19) (GPU, 221.93) (FPGA, 16.17) (Heterogeneous, 189.22)}; % RGB2Gray + InceptionV3
         \legend{Hist+Resnet50, Gauss+MobilnetV2, R2G+InceptionV3}
     \end{axis}

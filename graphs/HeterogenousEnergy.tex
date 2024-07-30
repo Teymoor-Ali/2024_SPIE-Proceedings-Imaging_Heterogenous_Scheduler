@@ -11,7 +11,7 @@
         legend image code/.code={\draw[#1, draw=none] (0cm,-0.1cm) rectangle (0.3cm,0.1cm);},
         ymajorgrids = false,
         ylabel = {\textbf{Kernel Energy (J) / Total Energy (J)}},
-        symbolic x coords={CPU,GPU,FPGA,HP},
+        symbolic x coords={CPU,GPU,FPGA,Heterogeneous},
         xtick = data,
         nodes near coords,
         nodes near coords style={font=\small, anchor=west,rotate=90,inner xsep=0.9pt,black},
@@ -25,11 +25,11 @@
     ]
         % Total Energy Data Plots
         \addplot[style={blue,fill=blue!60}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=20pt}]
-            coordinates {(CPU, 17.30) (GPU, 16.30) (FPGA, 0.82) (HP, 15.00)}; % Histogram Equalisation + ResNet-50
+            coordinates {(CPU, 17.30) (GPU, 16.30) (FPGA, 0.82) (Heterogeneous, 15.00)}; % Histogram Equalisation + ResNet-50
         \addplot[style={darkcandyapplered,fill=darkcandyapplered}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=20pt}]
-            coordinates {(CPU, 7.80) (GPU, 4.70) (FPGA, 0.51) (HP, 5.00)}; % Gaussian Filter + MobilnetV2
-        \addplot[style={forestgreen,fill=forestgreen}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=20pt}]
-            coordinates {(CPU, 18.33) (GPU, 11.09) (FPGA, 0.45) (HP, 12.00)}; % RGB2Gray + InceptionV3
+            coordinates {(CPU, 7.80) (GPU, 4.70) (FPGA, 0.51) (Heterogeneous, 5.00)}; % Gaussian Filter + MobilnetV2
+        \addplot[style={forestgreen,fill=forestgreen!70}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=20pt}]
+            coordinates {(CPU, 18.33) (GPU, 11.09) (FPGA, 0.45) (Heterogeneous, 12.00)}; % RGB2Gray + InceptionV3
         \legend{Hist+Resnet50, Gauss+MobilnetV2, R2G+InceptionV3}
     \end{axis}
 
@@ -46,7 +46,7 @@
         ylabel = {\textbf{}},
         axis y line*=right,
         axis x line=none,
-        symbolic x coords={CPU,GPU,FPGA,HP},
+        symbolic x coords={CPU,GPU,FPGA,Heterogeneous},
         xtick = \empty,
         ytick style = {draw=none}, % Hides the y-axis ticks
         yticklabels = {}, % Hides the y-axis labels
@@ -61,10 +61,10 @@
     ]
         % Kernel Energy Data Plots
         \addplot[style={blue,fill=blue!30},]
-            coordinates {(CPU, 2.78) (GPU, 0.33) (FPGA, 0.29) (HP, 0.30)}; % Histogram Equalisation + ResNet-50
+            coordinates {(CPU, 2.78) (GPU, 0.33) (FPGA, 0.29) (Heterogeneous, 0.27)}; % Histogram Equalisation + ResNet-50
         \addplot[style={darkcandyapplered,fill=darkcandyapplered!30}]
-            coordinates {(CPU, 0.98) (GPU, 0.26) (FPGA, 0.19) (HP, 0.20)}; % Gaussian Filter + MobilnetV2
+            coordinates {(CPU, 0.98) (GPU, 0.26) (FPGA, 0.19) (Heterogeneous, 0.17)}; % Gaussian Filter + MobilnetV2
         \addplot[style={forestgreen,fill=forestgreen!30}, every node near coord/.append style={rotate=0, anchor=west,inner xsep=0pt}]
-            coordinates {(CPU, 3.60) (GPU, 0.44) (FPGA, 0.37) (HP, 0.40)}; % RGB2Gray + InceptionV3
+            coordinates {(CPU, 3.60) (GPU, 0.44) (FPGA, 0.37) (Heterogeneous, 0.35)}; % RGB2Gray + InceptionV3
     \end{axis}
 \end{tikzpicture}
